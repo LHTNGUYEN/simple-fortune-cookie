@@ -1,7 +1,7 @@
 name: CI
 env:
-  docker_username: ${{ secret.DOCKER_USERNAME }}
-  docker_password: ${{ secret.DOCKER_PASSWORD }}
+  docker_username: ${{ secrets.DOCKER_USERNAME }}
+  docker_password: ${{ secrets.DOCKER_PASSWORD }}
 on:
 #  pull_request:
 #    branches:
