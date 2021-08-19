@@ -12,23 +12,22 @@ jobs:
     needs: [Build,Test]
     steps:
       - uses: actions/checkout@v2
-      - name: DockerHub login
-        uses: docker/login-action@v1
-        with:
-           secrets: | GIT_AUTH_TOKEN=${{ env.git_auth_token }}
       - name: Build push frontend
         uses: docker/build-push-action@v2
         with:
           context: ./frontend
           push: true
           tags: longu17/frontend:latest
+          secrets: |
+             GIT_AUTH_TOKEN=${{ env.git_auth_token }}
       - name: Build push backend
         uses: docker/build-push-action@v2
         with:
           context: ./backend
           push: true
           tags: longu17/backend:latest
- 
+          secrets: |
+             GIT_AUTH_TOKEN=${{ env.git_auth_token }}
   Clone-down:
     name: golang clone down
     runs-on: ubuntu-latest
