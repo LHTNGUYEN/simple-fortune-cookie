@@ -76,3 +76,4 @@ jobs:
           context: ./frontend
           push: true
           tags: longu17/frontend:latest
+
