@@ -69,10 +69,10 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: longu17/backend:latest
+          tags: longu17/backend:${{ GITHUB.SHA }}
       - name: Build and push frontend
         uses: docker/build-push-action@v2
         with:
           context: ./frontend
           push: true
-          tags: longu17/frontend:latest
+          tags: longu17/frontend:${{ GITHUB.SHA }}
