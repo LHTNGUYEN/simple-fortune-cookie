@@ -83,9 +83,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Change frotnend deploy file tags
-        run: awk '{sub(/TAG/,${{ github.sha }})}1' backend-deployment.yaml > temp.yaml && mv temp.yaml backend-deployment.yaml
-      - name: Change backend deploy file tags
-        run: awk '{sub(/TAG/,${{ github.sha }})}1' frontend-deployment.yaml > temp.yaml && mv temp.yaml frontend-deployment.yaml
-      - name: Deploy to Kubernetes
-        run: k apply -f ./*-deployment.yaml
+      - name: Download new image version for frontend
+        run: kubectl rollout restart deploy frontend
+      - name: Download new image version for backend
+        run: kubectl rollout restart deploy backend
