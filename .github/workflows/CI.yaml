@@ -75,5 +75,5 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: longu17/frontend:latest
+          tags: longu17/frontend:${{ github.sha }}
 
