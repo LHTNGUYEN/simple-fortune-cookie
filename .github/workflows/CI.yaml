@@ -3,10 +3,10 @@ env:
   docker_username: ${{ secret.DOCKER_USERNAME }}
   docker_password: ${{ secret.DOCKER_PASSWORD }}
 on:
-  pull_request:
-    branches:
-    - main
-
+#  pull_request:
+#    branches:
+#    - main
+  push:
 jobs:
   CD-push:
     runs-on: ubuntu-latest
