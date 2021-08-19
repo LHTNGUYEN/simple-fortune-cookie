@@ -76,4 +76,16 @@ jobs:
           context: ./frontend
           push: true
           tags: longu17/frontend:${{ GITHUB.SHA }}
-
+  Deploy:
+    name: deploy to cluster
+    runs-on: self-hosted
+    needs: [CD-push]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Change frotnend deploy file tags
+        run: awk '{sub(/TAG/,${{ github.sha }})}1' backend-deployment.yaml > temp.yaml && mv temp.yaml backend-deployment.yaml
+      - name: Change backend deploy file tags
+        run: awk '{sub(/TAG/,${{ github.sha }})}1' frontend-deployment.yaml > temp.yaml && mv temp.yaml frontend-deployment.yaml
+      - name: Deploy to Kubernetes
+        run: k apply -f ./*-deployment.yaml
