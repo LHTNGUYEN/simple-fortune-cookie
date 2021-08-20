@@ -2,7 +2,7 @@ name: CI/CD
 env:
   docker_username: ${{ secrets.DOCKER_USERNAME }}
   docker_token: ${{ secrets.DOCKER_TOKEN }}
-  github_token: ${{ secrets.GITHUB_TOKEN }}
+  git_token: ${{ secrets.GIT_TOKEN }}
 on:
   #  pull_request:
   #    branches:
@@ -47,7 +47,7 @@ jobs:
       - name: Run dotenv-linter
         uses: dotenv-linter/action-dotenv-linter@v2
         with:
-          github_token: ${{ secrets.git_token }}
+          git_token: ${{ secrets.git_token }}
           reporter: github-pr-review # Default is github-pr-check
           dotenv_linter_flags: --skip UnorderedKey
       - name: download code artifact for test
