@@ -2,6 +2,7 @@ name: CI/CD
 env:
   docker_username: ${{ secrets.DOCKER_USERNAME }}
   docker_token: ${{ secrets.DOCKER_TOKEN }}
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 on:
   #  pull_request:
   #    branches:
@@ -42,6 +43,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: Clone-down
     steps:
+      - uses: actions/checkout@v2
+      - name: Run dotenv-linter
+        uses: dotenv-linter/action-dotenv-linter@v2
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review # Default is github-pr-check
+          dotenv_linter_flags: --skip UnorderedKey
       - name: download code artifact for test
         uses: actions/download-artifact@v2
         with:
