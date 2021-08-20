@@ -2,12 +2,11 @@ name: CI/CD
 env:
   docker_username: ${{ secrets.DOCKER_USERNAME }}
   docker_token: ${{ secrets.DOCKER_TOKEN }}
-  git_token: ${{ secrets.GIT_TOKEN }}
 on:
-  #  pull_request:
-  #    branches:
-  #    - main
-  push:
+  pull_request:
+    branches:
+    - main
+  #push:
 jobs:
   Clone-down:
     name: golang clone down
