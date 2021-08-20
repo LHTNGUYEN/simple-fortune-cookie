@@ -47,7 +47,7 @@ jobs:
       - name: Run dotenv-linter
         uses: dotenv-linter/action-dotenv-linter@v2
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.git_token }}
           reporter: github-pr-review # Default is github-pr-check
           dotenv_linter_flags: --skip UnorderedKey
       - name: download code artifact for test
