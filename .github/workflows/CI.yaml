@@ -1,9 +1,12 @@
-name: CI
+name: CI/CD
+env:
+  docker_username: ${{ secrets.DOCKER_USERNAME }}
+  docker_token: ${{ secrets.DOCKER_TOKEN }}
 on:
-  pull_request:
-    branches:
-    - main
-
+  #  pull_request:
+  #    branches:
+  #    - main
+  push:
 jobs:
   Clone-down:
     name: golang clone down
@@ -15,7 +18,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: code
-          path: .  
+          path: .
   Build:
     name: golang build
     runs-on: ubuntu-latest
@@ -25,14 +28,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: code
-          path: .  
+          path: .
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-      - name: build backend  
+      - name: build backend
         run: cd backend && go build
-      - name: build frontend  
+      - name: build frontend
         run: cd frontend && go build
   Test:
     name: golang test
@@ -43,11 +46,44 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: code
-          path: .  
+          path: .
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
       - name: test
         run: cd frontend && go test
-
+  CD-push:
+    runs-on: ubuntu-latest
+    needs: [Build, Test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build and push backend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          push: true
+          tags: longu17/backend:${{ GITHUB.SHA }}
+      - name: Build and push frontend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          push: true
+          tags: longu17/frontend:${{ GITHUB.SHA }}
+  Deploy:
+    name: deploy to cluster
+    runs-on: self-hosted
+    needs: [CD-push]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download new image version for frontend
+        run: kubectl rollout restart deploy frontend
+      - name: Download new image version for backend
+        run: kubectl rollout restart deploy backend
